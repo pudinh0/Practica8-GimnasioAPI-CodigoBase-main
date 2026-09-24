@@ -1,31 +1,18 @@
-# Gimnasio API — Código base (Semana 5)
+1. ¿Por qué el paquete se llama adapter-mariadb si usamos MySQL?
+mariaDb es un motor que es compatible con mysql, ya que comparten la misma interfaz y procotolo de red, debido a esto prisma puede utilizar cualquiera de las dos bases de datos
 
-API REST en NestJS para el gimnasio: `Clases`, `Horarios`, `Miembros` e `Inscripciones`, cada
-módulo con dominio, DTOs e infraestructura separados (patrón repositorio + inyección por token).
-Los datos viven en memoria — ningún repositorio se conecta todavía a una base de datos real.
+2. ¿Editar schema.prisma cambia algo en la base de datos antes de migrar?
+no, es solo la representacion de la base de datos, si hubiera un cambio o si se necesita una nueva migracion se tiene que ejecutar el comando de prisma migrate dev.
 
-Este proyecto es el punto de partida de la Práctica 8 (Prisma) y la Práctica 9 (Blindar la API).
+3. ¿La carpeta de migraciones es una foto del esquema o un historial?
+es un historial de las migraciones
 
-## Cómo correrlo
+4. ¿Por qué Horario.clase sí crea una columna y Clase.horarios no?
+porque es una relación de uno a muchos, de parte de horario a clases,
+esto significa que horario si tiene la columna donde sale clase, ya que este
+necesita saber a que clase pertenece, a diferencia de una clase que tiene un solo horario
 
-```bash
-npm install
-npm run start:dev
-```
+5. ¿De dónde sale la relación de muchos a muchos entre Miembro y Horario si nunca se declaró así?
+por la tabla intermedia que es la de inscripcion, esto permite que las dos tablas se unan por medio de la
+tabla inscripcion (haciendo la conexion de 1 a n de las dos a n:M)
 
-El servidor levanta en `http://localhost:3000`. En `peticiones.http` está la batería completa de
-pruebas (requiere la extensión "REST Client" de VS Code).
-
-## Estructura
-
-```
-src/
-  clases/        CRUD de clases del gimnasio
-  horarios/      CRUD de horarios (día, hora, cupo, entrenador)
-  miembros/      CRUD de miembros del gimnasio
-  inscripciones/ inscribir a un miembro a un horario, con reglas de cupo y duplicados
-  datos/         datos de arranque (seed) que usan Horarios y Miembros
-```
-
-Cada módulo sigue la misma forma: `dominio/` (entidades + interfaz del repositorio), `dto/`,
-`infra/` (repositorio en memoria) y el token de inyección en `<módulo>.tokens.ts`.
